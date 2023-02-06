@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news/src/widgets/loading_container.dart';
 import '../models/item_model.dart';
 import '../blocs/stories_provider.dart';
 
@@ -15,20 +16,38 @@ class NewsListTile extends StatelessWidget {
       builder:
           ((context, AsyncSnapshot<Map<int, Future<ItemModel?>>> snapshot) {
         if (snapshot.hasData == false) {
-          return Text("Stream still loading $itemId");
+          return const LoadingContainer();
         }
 
         return FutureBuilder(
           future: snapshot.data![itemId],
           builder: (context, AsyncSnapshot<ItemModel?> itemSnapshot) {
             if (itemSnapshot.hasData == false) {
-              return Text("ItemModel $itemId being loading...");
+              return const LoadingContainer();
             }
 
-            return Text(itemSnapshot.data!.title ?? "(?)");
+            return Column(
+              children: [
+                buildTile(itemSnapshot.data!),
+                const Divider(),
+              ],
+            );
           },
         );
       }),
+    );
+  }
+
+  Widget buildTile(ItemModel item) {
+    return ListTile(
+      title: Text(item.title!),
+      subtitle: Text("${item.score.toString()} points"),
+      trailing: Column(
+        children: [
+          const Icon(Icons.comment),
+          Text("${item.descendants}"),
+        ],
+      ),
     );
   }
 }
