@@ -22,6 +22,9 @@ class App extends StatelessWidget {
   Route routes(RouteSettings settings) {
     if (settings.name == "/") {
       return MaterialPageRoute(builder: (context) {
+        final bloc = StoriesProvider.of(context);
+        bloc.fetchTopIds();
+
         return const NewsList();
       });
     }
