@@ -28,7 +28,7 @@ class NewsListTile extends StatelessWidget {
 
             return Column(
               children: [
-                buildTile(itemSnapshot.data!),
+                buildTile(context, itemSnapshot.data!),
                 const Divider(),
               ],
             );
@@ -38,8 +38,11 @@ class NewsListTile extends StatelessWidget {
     );
   }
 
-  Widget buildTile(ItemModel item) {
+  Widget buildTile(BuildContext context, ItemModel item) {
     return ListTile(
+      onTap: () {
+        Navigator.pushNamed(context, "/${item.id}");
+      },
       title: Text(item.title!),
       subtitle: Text("${item.score.toString()} points"),
       trailing: Column(
